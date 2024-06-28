@@ -1,0 +1,100 @@
+.qr_code_options
+{
+
+    .qr_scan_header {
+        width: 90%;
+        margin: 0 auto;
+        border-bottom: 1px solid #E3E8EE;
+        padding-top: 35px;
+        padding-bottom: 45px;
+        position: relative;
+    }
+    
+    button.ar_scan_btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #F7FAFC;
+        border: 1px solid #CCD6E0;
+        padding: 7px 10px 7px 10px;
+        border-radius: 5px;
+    }
+
+    button.ar_scan_btn a{
+        color: #434D56;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16px;
+        text-decoration: none;
+    }     
+
+    .scan_logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.qr_code_section {
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 60px;
+        min-height: 78vh;
+
+    .qr_code_wrap {
+
+        text-align: center;
+      
+        .ant-card {
+            border-radius: 20px;
+            background: #F7FAFC;
+            text-align: center;
+            padding: 25px 25px 35px;
+            border: unset;
+        }
+
+        .ant-card-body {
+            padding: 0;
+        }
+
+        .ant-card-cover svg {
+            margin-bottom: 10px;
+        }
+        
+        h3 {
+            color: #1A2128;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 150%;
+            margin-bottom: 8px;
+        } 
+        
+        p {
+            color:#A9B2B9;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 150%;
+            margin: 0;
+        }
+
+        .scan_btn {
+            border-radius: 5px;
+            background: #0C6;
+            color: #FFF;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            margin-top: 25px;
+        }
+
+    }
+}
+
+
+
+ 
+

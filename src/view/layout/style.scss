@@ -1,0 +1,143 @@
+// Define breakpoints as variables
+$small-screen: 450px;
+$medium-screen: 767px;
+$large-screen1: 991px;
+$extra-large-screen: 1200px;
+
+.main-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .dashboard_main {
+        padding: 0px 28px 20px 38px;
+        // max-width: 86%;
+        width: 100%;
+        position: relative;
+        transition: all 0.5s ease;
+        transform-origin: right;
+
+        .product_header {
+            margin-bottom: 35px;
+            padding: 18px 0 0 0;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: var(--white-color);
+            z-index: 2;
+        }
+
+        .product_header_mobile_view {
+            display: none;
+            padding: 10px 0;
+
+            .mv_wrap_sec {
+                display: flex;
+                align-items: center;
+
+            }
+
+            .mv_logo {
+                padding-left: 20px;
+            }
+        }
+
+
+
+    }
+
+    .expand_right+.dashboard_main {
+        max-width: 100%;
+    }
+}
+
+// Media queries
+
+@media (max-width: $extra-large-screen) {
+
+    .main-wrapper {
+
+        .dashboard_main {
+            padding: 18px 18px 20px 18px;
+        }
+
+    }
+
+}
+
+
+@media (max-width: $large-screen1) {
+
+    .main-wrapper {
+
+        .dashboard_main {
+
+            .product_header_mobile_view {
+                display: block;
+            }
+        }
+
+    }
+
+}
+
+@media (max-width: $medium-screen) {
+    .main-wrapper {
+        .dashboard_main {
+
+            .product_header_mobile_view {
+                position: fixed;
+                z-index: 9;
+                width: 100%;
+                top: 0;
+                left: 0;
+                padding-left: 20px;
+                background-color: #fff;
+                .mv_wrap_sec {
+                    background-color: white;
+                    padding-right: 156px;
+                }
+                
+            }
+
+            .product_header {
+                position: static ;
+            }
+        }
+
+        .qr_product_top {
+            padding-top: 50px;
+        }
+
+        .qr_top_right {
+            margin-top: 1rem;
+            align-items: center;
+
+        }
+
+
+      
+
+        // .main-wrapper .dashboard_main 
+    }
+
+}
+
+// @media (max-width : $small-screen) {
+//     .qr_top_right{
+//         position: fixed;
+//         top: 0;
+//         right: 20px;  
+//         .qr_serach_input
+
+//         {.serach-input {
+//             position: fixed;
+//             top: 15%;
+//             right: 0;
+//             width: 100%;
+//             left: 5%;
+//         }  
+//     }    
+//     }
+
+
+// }
