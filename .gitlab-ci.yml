@@ -1,148 +1,59 @@
-## Project: Community-care
-
 ## NAME: Kamaldhari Infotech
-## 17 Aug 2023
+## Project: AXL_Dashboard
+## 03 july 2024
 ## Divyesh Tailor
 
-### Variables
-## RUNNER_SERVER_PRIV_KEY = 
-## DEV_SSH_KNOWN_HOSTS = aa project mate runner je server par install karya che. e server par check karo kaya user thi runner install kairu che and ee user na .ssh/known_hosts ma entry ase 
-
-
-### Runner Details
-## SERVER Proxmox
-## SERVER_IP : 192.168.0.103
-## vm052 [Same server which is use for ravl gitlab]
-
-### SERVER Details
-## SERVER Proxmox
-## SERVER_IP : 192.168.0.181
-## cyberpanel-local
-
-
 stages:
-- Test
-- Lint
-- Build
-- Package
-- Deploy
-
-####################################################################
-
-# Request_Build:
-#   stage: Build
-#   environment:
-#     name: Production
-#   tags:
-#     - build
-#   script:
-#     #- cp .env.dev .env
-#     - npm i 
-#     #- npm run lint
-#     - npm run build
-#   rules:
-#     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "sub-master"'
-#       when: always
-#     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-#       when: always
-#     - when: never
-
-
-# ## Build
-# build-Production:
-#   image: jainil00/reactbuilder:testing
-#   environment:
-#     name: Production
-#   variables:
-#     CI: 'false'
-#     GIT_DEPTH: 10
-#   stage: Build
-#   artifacts:
-#     untracked: false
-#     expire_in: 2 days
-#     paths:
-#     - build
-#   before_script:
-#     - cat $ENV_FILE > .env
-#     #- npm install -g npm@latest
-#     - npm install -g yarn  
-#     - yarn install --ignore-engines 2> >(grep -v warning 1>&2)
-#   script:
-#     - cat $ENV_FILE > .env
-#     # - echo $CI_REGISTRY_PAS
-#     # - echo $CI_PROJECT_TITLE
-#     # - npx browserslist@latest --update-db
-#     # - export NODE_OPTIONS=--max_old_space_size=4096
-#     # - echo REACT_APP_SERVICE_URL=$DEV_REACT_APP_SERVICE_URL >> .env
-#     # - echo REACT_APP_URL=$DEV_REACT_APP_URL >> .env
-#     # - echo REACT_APP_DATABASE_TYPE=$DEV_REACT_APP_DATABASE_TYPE >> .env
-#     # - echo REACT_APP_S3_BUCKET = $DEV_REACT_APP_S3_BUCKET >> .env
-#     # - echo REACT_APP_S3_URL = $DEV_REACT_APP_S3_URL >> .env
-#     # - echo PORT=$DEV_PORT >> .env
-#     # - echo REACT_APP_FB_APP_ID=$REACT_APP_FB_APP_ID >> .env
-#     # - echo REACT_APP_FB_PAGE_ID=$REACT_APP_FB_PAGE_ID >> .env
-#     # - echo REACT_APP_MODE=STAGING >> .env
-#     # - echo REACT_APP_UPLOAD_REPORT_SIZE=$REACT_APP_UPLOAD_REPORT_SIZE >> .env
-#     - yarn build
-#   tags:
-#     - shell
-#   only:
-#     - master
-#      - sub-master
-####################################################################
-
+  - Package
+  - Deploy
+  
 ### Package ###
 Package-Production:
-  tags:
-  - shell
   stage: Package
   variables:
     CI_REGISTRY_USER: $Docker_Hub_User_Name
     CI_REGISTRY_PASSWORD: $Docker_Hub_PAT_Token
     CI_REGISTRY: docker.io
-    CI_REGISTRY_IMAGE: index.docker.io/adminkamaldhari/qrcode-frontend
+    CI_REGISTRY_IMAGE: index.docker.io/adminkamaldhari/axl-dashboard
+
   environment:
     name: Production
+    url: https://axl-dashboard.webcase.me
   before_script:
-  - echo "Decrypting secret and saving to .env"
-  - echo "$ENV_FILE" | base64 -d > .env
-  #- echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-  #- docker login -u $CI_REGISTRY_USER $CI_REGISTRY
+    - docker system prune -a --force
+    # - echo "Decrypting secret and saving to .env"
+    # - echo "$PROD_ENV_FILE" | base64 -d > .env 
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
-  - docker build -t $CI_REGISTRY_IMAGE:Production .
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-  - docker push $CI_REGISTRY_IMAGE --all-tags
+    - docker rmi --force $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_PROD_TAG
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_PROD_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_PROD_TAG
+    - docker rmi --force $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_PROD_TAG
   when: on_success
+  tags:
+    - shell 
   only:
-  - master
-  - sub-master
-
-#####################################################################
+    - master
 
 ### Deploy ###
 Deploy-Production:
   stage: Deploy
   environment:
     name: Production
-    url: https://qrcode.webcase.me/
+    url: https://axl-dashboard.webcase.me
   before_script:
-  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
-  - eval $(ssh-agent -s)
-  - echo "$RUNNER_SERVER_PRIV_KEY" | tr -d '\r' | ssh-add -
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - echo "$DEV_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$RUNNER_SERVER_PRIV_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$DEV_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
-  - ssh $SERVER_USER@$SERVER_IP "docker stop qrcode-frontend || true"
-  - ssh $SERVER_USER@$SERVER_IP "docker rm qrcode-frontend || true"
-  - ssh $SERVER_USER@$SERVER_IP "docker rmi adminkamaldhari/qrcode-frontend:Production || true"
-  - ssh $SERVER_USER@$SERVER_IP "docker system prune -a --force && docker run -d -t -p 6000:5173 --name "qrcode-frontend" adminkamaldhari/qrcode-frontend:Production"
+    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "docker stop index.docker.io/adminkamaldhari/axl-dashboard:production && docker rm index.docker.io/adminkamaldhari/axl-dashboard:production && docker rmi index.docker.io/adminkamaldhari/axl-dashboard:production || true"
+    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "bash /root/RM-Prod-axl-dashboard.sh"
+    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "docker system prune -a --force && docker run -d -t -p 3006:80 --name "axl-dashboard" index.docker.io/adminkamaldhari/axl-dashboard:production"
   tags:
-  - shell
+    - shell 
   only:
-  - master
-  - sub-master
-
-#####################################################################
+    - master

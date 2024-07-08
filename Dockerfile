@@ -1,16 +1,16 @@
 # Step 1: Build the application
-FROM node:20 AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm i --legacy-peer-deps
+COPY package*.json ./
+RUN npm i 
 
 COPY . .
-ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Step 2: Set up the production environment
-FROM nginx:stable-alpine
+FROM nginx:1.26-alpine-slim
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY Docker/nginx.conf /etc/nginx/conf.d/default.conf
 
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
