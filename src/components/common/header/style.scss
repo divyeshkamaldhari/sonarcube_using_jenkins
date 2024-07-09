@@ -1,0 +1,33 @@
+.header-component {
+    display: flex;
+    align-items: center;
+
+    .left-nav {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .right-nav {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        svg {
+            margin: 10px;
+        }
+    }   
+
+    .ant-menu-title-content {
+        color: white;
+
+        :hover {
+            color: #d1d2d3;
+        }
+    }
+}

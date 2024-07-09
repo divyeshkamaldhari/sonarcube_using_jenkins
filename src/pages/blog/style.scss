@@ -1,0 +1,66 @@
+pre {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+code {
+    font-family: monospace;
+    color: #d63384; /* Change this to your preferred color */
+}
+
+.main-content .content {
+    display:flex;
+    flex-wrap: wrap;
+    .single-category-card {
+        margin: 20px 20px 0px 0px;
+    }
+}
+
+.blog-title {
+    display: flex;
+    justify-content: center;
+    color: white;
+    padding: 40px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, #1C64F2 0%, #103A8C 140.79%);
+    font-family: Inter;
+    font-weight: 800;
+    line-height: 48px;
+}
+
+.blog-tabs {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+
+    .ant-segmented{
+        margin: 10px;
+        font-family: Inter;
+        font-weight: 500;
+        line-height: 27px;
+        background-color: white;
+    }
+}
+
+
+:where(.css-dev-only-do-not-override-j9bb5n).ant-segmented .ant-segmented-item {
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    // transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    border-radius: 49px;
+    padding: 8px;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 27px;
+    margin: 10px;
+}
+
+
+:where(.css-dev-only-do-not-override-j9bb5n).ant-segmented .ant-segmented-item-selected {
+    background: var(--blue-500, #3F83F8);
+    color: white;
+}

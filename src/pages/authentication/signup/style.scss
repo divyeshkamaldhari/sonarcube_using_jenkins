@@ -1,0 +1,71 @@
+.login.signup-one {
+    .login-right {
+        .main-login-form {
+            padding: 32px;
+            border-radius: 8px;
+            border: 1px solid #DEDEDE;
+            background: var(--white-color);
+        }
+
+        .main-login-footer .ant-form-item-control-input-content {
+            text-align: left;
+        }
+    }
+}
+
+
+
+.login.signup-two {
+    .login-right {
+        .main-login-form {
+
+        @media only screen and (max-width: 991px) {
+            max-width: 500px;
+        }
+
+        }
+    }
+}
+
+.login.signup-three {
+    .login-right {
+        .main-login-form{
+            .login-heading {
+                margin-bottom: 48px;
+                
+                @media only screen and (max-width: 991px) {
+                    margin-bottom: 28px;
+                }
+            }
+
+        }
+    }
+    
+    .form-wrap {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+
+        @media only screen and (max-width: 991px) {
+            gap: 16px;
+        }
+
+        @media only screen and (max-width: 480px) {
+          flex-wrap: wrap;
+          gap:0;
+        }
+    }
+    
+    .form-wrap .ant-form-item{
+        max-width: 50%;
+        width:100%;
+
+        @media only screen and (max-width: 991px) {
+            margin-bottom: 16px;
+        }
+
+        @media only screen and (max-width: 480px) {
+            max-width: 100%;
+        }
+    }
+}

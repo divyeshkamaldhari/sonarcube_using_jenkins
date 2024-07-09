@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    // "paths": {
+    //   "@your_app_name/assets": ["assets/public_api.ts"],
+    //   "@your_app_name/components": ["components/public_api.ts"],
+    //   "@your_app_name/constants": ["constants/public_api.ts"],
+    //   "@your_app_name/interfaces": ["interfaces/public_api.ts"],
+    //   "@your_app_name/pages": ["interfaces/public_api.ts"],
+    //   "@your_app_name/redux": ["redux/public_api.ts"],
+    //   "@your_app_name/routes": ["types/public_api.ts"],
+    //   "@your_app_name/utils": ["util/public_api.ts"],
+    // },
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

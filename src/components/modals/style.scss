@@ -1,0 +1,28 @@
+.regi-modal-wrap {
+    text-align: center;
+
+    svg {
+        width: 30px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        font-size: var(--f16);
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    button.ant-btn {
+        background: var(--foreground-primary);
+        color: var(--white-color);
+        font-family: var(--font-int);
+        font-size: var(--f14);
+        font-weight: 500;
+        line-height: 150%;
+    }
+}
+
+
+.regi-modal span.ant-modal-close-icon svg {
+    fill: #000;
+}

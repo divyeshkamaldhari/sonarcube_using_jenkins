@@ -1,0 +1,32 @@
+.change-pass {
+    padding: 20px 10px;
+    width: 500px;
+    margin: 0 auto;
+
+    
+    @media (max-width:680px){
+        width: 100%;
+    }
+
+    .ant-form-item{
+        margin-bottom: 16px;
+    }
+
+    .ant-form-item-required {
+        font-weight: 600;
+    }
+
+    .ant-input-affix-wrapper {
+        padding: 9px 10px;
+    }
+
+    .ant-btn span {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .ant-btn {
+        height: auto;
+    }
+}
+

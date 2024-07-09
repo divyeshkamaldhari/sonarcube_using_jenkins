@@ -1,26 +1,33 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2020: true, node: true },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
+    'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'webpack.config.js',
+    'dist/*',
+    '**/*.js',
+    'node_modules/*',
+  ],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-refresh', 'prettier'],
   rules: {
-    'react/jsx-no-target-blank': 'off',
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
-    "react/prop-types": "off"
+    // indent: ['error', 2],
+    indent: 'off',
+    semi: ['error', 'always'],
   },
-}
-
-
-
-// akbdf 
+};

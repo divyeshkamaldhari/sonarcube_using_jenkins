@@ -1,12 +1,71 @@
 ## NAME: Kamaldhari Infotech
-## Project: AXL_Dashboard
-## 03 july 2024
+## Project: REACT-BOILERPLATE
+## 19 April 2023
 ## Divyesh Tailor
 
+image: 
+  name: sonarsource/sonar-scanner-cli:latest
+  entrypoint: [""]
+  
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+
+
 stages:
+  - sonarqube-check
+  - Test
+  - Lint
+  - Build
+  - sonarqube-vulnerability-report
   - Package
   - Deploy
-  
+
+
+
+sonarqube-check:
+  stage: sonarqube-check
+  script:
+    - sudo -u gitlab-runner /opt/sonar-scanner/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner
+  allow_failure: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+# Request_Build:
+#   stage: Build
+#   environment:
+#     name: Production
+#   tags:
+#     - build
+#     # - shell
+#   script:
+#     - docker build -t $CI_REGISTRY_IMAGE:Build -f ./Build.Dockerfile .
+#   rules:
+#     # - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "Dev"'
+#     #   when: always
+#     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+#       when: always  
+#     - when: never
+
+sonarqube-vulnerability-report:
+  stage: sonarqube-vulnerability-report
+  script:
+    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/gitlab_sast_export?projectKey=devops_sonarqube_boilerplate_react_2a46203f-2a45-4321-b82e-2d010bfaf39d&branch=${CI_COMMIT_BRANCH}&pullRequest=${CI_MERGE_REQUEST_IID}" -o gl-sast-sonar-report.json'
+  allow_failure: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  artifacts:
+    expire_in: 1 day
+    reports:
+      sast: gl-sast-sonar-report.json
+
+
 ### Package ###
 Package-Production:
   stage: Package
@@ -14,15 +73,15 @@ Package-Production:
     CI_REGISTRY_USER: $Docker_Hub_User_Name
     CI_REGISTRY_PASSWORD: $Docker_Hub_PAT_Token
     CI_REGISTRY: docker.io
-    CI_REGISTRY_IMAGE: index.docker.io/adminkamaldhari/axl-dashboard
+    CI_REGISTRY_IMAGE: index.docker.io/adminkamaldhari/sonarqube-react-boilerplate
 
   environment:
     name: Production
-    url: https://axl-dashboard.webcase.me
+    url: https://mern-boilerplate.webcase.me/
   before_script:
     - docker system prune -a --force
-    # - echo "Decrypting secret and saving to .env"
-    # - echo "$PROD_ENV_FILE" | base64 -d > .env 
+    - echo "Decrypting secret and saving to .env"
+    - echo "$PROD_ENV_FILE" | base64 -d > .env 
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - docker rmi --force $CI_REGISTRY_IMAGE:$CI_REGISTRY_IMAGE_PROD_TAG
@@ -34,13 +93,12 @@ Package-Production:
     - shell 
   only:
     - master
-
 ### Deploy ###
 Deploy-Production:
   stage: Deploy
   environment:
-    name: Production
-    url: https://axl-dashboard.webcase.me
+    name: PROD_Branch
+    url: $PROD_URL
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
@@ -50,9 +108,9 @@ Deploy-Production:
     - echo "$DEV_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "docker stop index.docker.io/adminkamaldhari/axl-dashboard:production && docker rm index.docker.io/adminkamaldhari/axl-dashboard:production && docker rmi index.docker.io/adminkamaldhari/axl-dashboard:production || true"
-    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "bash /root/RM-Prod-axl-dashboard.sh"
-    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "docker system prune -a --force && docker run -d -t -p 3006:80 --name "axl-dashboard" index.docker.io/adminkamaldhari/axl-dashboard:production"
+    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "docker stop index.docker.io/adminkamaldhari/sonarqube-react-boilerplate:production && docker rm index.docker.io/adminkamaldhari/sonarqube-react-boilerplate:production && docker rmi index.docker.io/adminkamaldhari/sonarqube-react-boilerplate:production || true"
+    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "bash /root/RM-Prod-sonarqube-react-boilerplate.sh"
+    - ssh $PRODUCTION_SERVER_USER@$PRODUCTION_SERVER_IP "docker system prune -a --force && docker run -d -t -p 3050:80 --name "sonarqube-react-boilerplate" index.docker.io/adminkamaldhari/sonarqube-react-boilerplate:production"
   tags:
     - shell 
   only:

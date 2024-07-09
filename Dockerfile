@@ -2,13 +2,13 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm i 
+RUN npm i --legacy-peer-deps
 
 COPY . .
 RUN npm run build
 
 # Step 2: Set up the production environment
-FROM nginx:1.26-alpine-slim
+FROM nginx:stable-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY Docker/nginx.conf /etc/nginx/conf.d/default.conf
 
